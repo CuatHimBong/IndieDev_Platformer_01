@@ -8,22 +8,37 @@ public class ClickChanger : MonoBehaviour // Имя класса должно совпадать с имене
     // Ссылка на компонент рендерера (отвечает за отрисовку)
     private SpriteRenderer _spriteRenderer;
 
-    // Awake вызывается ОДИН РАЗ при создании объекта в сцене.
-    // Идеальное место для поиска компонентов и инициализации.
+    // 1. Создаем переменную для хранения состояния (увеличен или нет)
+    private bool _isBig = false;
+
+    // 2. Запоминаем исходный размер, чтобы можно было вернуть
+    private Vector3 _startScale;
+
     private void Awake()
     {
         Debug.Log("Скрипт проснулся!");
-        // GetComponent<T>() — ищет компонент типа T на ЭТОМ же объекте.
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _startScale = transform.localScale; // Запоминаем размер при старте
     }
 
     private void Update()
     {
-        // Если нажал Пробел — меняем цвет
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Пробел нажат! Цвет меняется.");
-            _spriteRenderer.color = Random.ColorHSV();
+            // 3. Переключаем состояние на противоположное
+            _isBig = !_isBig;
+
+            // 4. Применяем размер в зависимости от состояния
+            if (_isBig)
+            {
+                transform.localScale = _startScale * 1.5f; // Увеличиваем в 1.5 раза
+            }
+            else
+            {
+                transform.localScale = _startScale; // Возвращаем как было
+            }
+
+            Debug.Log("Масштаб изменен!");
         }
     }
 
